@@ -361,6 +361,29 @@ p {
   font-size: 0.9rem;
 }
 
+/* RATES PAGE */
+.rates-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: var(--text-primary);
+}
+.rates-table th,
+.rates-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: left;
+}
+.rates-table th {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+}
+.rates-table tr:hover {
+  background-color: var(--bg-light);
+}
+
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .navbar {
