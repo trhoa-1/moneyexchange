@@ -1,7 +1,5 @@
-// Note: this simple demo uses the built-in `exchangeRates` object below.
-// The API constants are left here for future live updates.
-const API_KEY = "fxr_live_5c65d8ad56ef078646fc6f819cc52ba705e8"; // unused in demo
-const API_URL = "https://api.fxratesapi.com/latest"; // unused in demo
+const API_KEY = "fxr_live_5c65d8ad56ef078646fc6f819cc52ba705e8";
+const API_URL = "https://api.fxratesapi.com/latest";
 
 let exchangeRates = {
   ADA: 2.8102680129,AED: 3.6731007206,AFN: 66.3163066921,ALL: 82.5000106674,AMD: 379.0700476731,ANG: 1.7880002015,AOA: 912.2151768577,
@@ -180,105 +178,91 @@ let exchangeRates = {
   ZWL: 64016.645883199,
 };
 
-// --- Simple, well-commented converter logic ---
-
-/*
-  Data model:
-  - exchangeRates: map of currency code -> value meaning "1 USD = value (in that currency)".
-  Example: exchangeRates['EUR'] = 0.85 means 1 USD = 0.85 EUR.
-
-  Conversion logic (easy to understand):
-  - To convert A -> B we compute how many B for 1 A:
-    rate(A->B) = (USD->B) / (USD->A)
-  - Then result = amount * rate(A->B)
-
-  This file keeps DOM interactions minimal and names variables clearly.
-*/
-
-function rateFromTo(fromCode, toCode) {
-  const usdToFrom = exchangeRates[fromCode];
-  const usdToTo = exchangeRates[toCode];
-  // If either currency is missing, return 0 (no conversion possible)
-  if (usdToFrom == null || usdToTo == null) return 0;
-  return usdToTo / usdToFrom; // number of `toCode` units per 1 `fromCode`
+// --- Converter & rates UI logic ---
+function getRate(from, to) {
+  const usdToFrom = exchangeRates[from];
+  const usdToTo = exchangeRates[to];
+  if (!usdToFrom || !usdToTo) return 0;
+  return usdToTo / usdToFrom;
 }
 
-function formatAmount(value, maxFrac = 6) {
-  if (!Number.isFinite(value)) return '0';
-  // keep output simple and readable (no scientific notation)
-  return Number(value).toLocaleString(undefined, {maximumFractionDigits: maxFrac});
+function formatNumber(n) {
+  if (Number.isFinite(n)) {
+    return Math.round(n * 1000000) / 1000000;
+  }
+  return 0;
 }
 
-function showRate(fromCode, toCode, rate) {
+function updateRateDisplay(from, to, rate) {
   const el = document.getElementById('rateDisplay');
-  if (!el) return;
-  el.textContent = `1 ${fromCode} = ${formatAmount(rate)} ${toCode}`;
+  if (el) el.textContent = `1 ${from} = ${formatNumber(rate)} ${to}`;
 }
 
-function doConvert() {
-  const amountInput = document.getElementById('amount');
-  const resultInput = document.getElementById('result');
-  const fromSelect = document.getElementById('fromCurrency');
-  const toSelect = document.getElementById('toCurrency');
-  if (!amountInput || !resultInput || !fromSelect || !toSelect) return;
+function convert() {
+  const amountEl = document.getElementById('amount');
+  const resultEl = document.getElementById('result');
+  const fromSel = document.getElementById('fromCurrency');
+  const toSel = document.getElementById('toCurrency');
+  if (!amountEl || !resultEl || !fromSel || !toSel) return;
 
-  const amount = parseFloat(amountInput.value) || 0;
-  const from = fromSelect.value;
-  const to = toSelect.value;
-  const rate = rateFromTo(from, to);
+  const amount = parseFloat(amountEl.value) || 0;
+  const from = fromSel.value;
+  const to = toSel.value;
+  const rate = getRate(from, to);
   const converted = amount * rate;
-
-  resultInput.value = formatAmount(converted);
-  showRate(from, to, rate);
+  resultEl.value = formatNumber(converted);
+  updateRateDisplay(from, to, rate);
 }
 
-function swap() {
-  const fromSelect = document.getElementById('fromCurrency');
-  const toSelect = document.getElementById('toCurrency');
-  if (!fromSelect || !toSelect) return;
-  const prev = fromSelect.value;
-  fromSelect.value = toSelect.value;
-  toSelect.value = prev;
-  doConvert();
+function swapCurrencies() {
+  const fromSel = document.getElementById('fromCurrency');
+  const toSel = document.getElementById('toCurrency');
+  if (!fromSel || !toSel) return;
+  const tmp = fromSel.value;
+  fromSel.value = toSel.value;
+  toSel.value = tmp;
+  convert();
 }
 
-function populateRates() {
+function populateRatesTable() {
   const tbody = document.getElementById('rates-tbody');
-  const updatedEl = document.getElementById('rates-updated');
+  const updated = document.getElementById('rates-updated');
   if (!tbody) return;
 
-  const sample = ['EUR','GBP','JPY','AUD','CAD','CNY','INR','USD'];
+  const popular = ['EUR','GBP','JPY','AUD','CAD','CHF','CNY','INR','MXN','BRL','ZAR','RUB','TRY','USD'];
   tbody.innerHTML = '';
   const base = 'USD';
-  sample.forEach(code => {
-    if (exchangeRates[code] == null) return;
-    const r = rateFromTo(base, code);
+  popular.forEach(cur => {
+    if (!exchangeRates[cur]) return;
+    const rate = getRate(base, cur);
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${base}/${code}</td><td>${formatAmount(r)}</td><td>${new Date().toLocaleString()}</td>`;
+    const tdPair = document.createElement('td');
+    tdPair.textContent = `${base}/${cur}`;
+    const tdRate = document.createElement('td');
+    tdRate.textContent = formatNumber(rate);
+    const tdTime = document.createElement('td');
+    tdTime.textContent = new Date().toLocaleString();
+    tr.appendChild(tdPair);
+    tr.appendChild(tdRate);
+    tr.appendChild(tdTime);
     tbody.appendChild(tr);
   });
-  if (updatedEl) updatedEl.textContent = `Last update: ${new Date().toLocaleString()}`;
+  if (updated) updated.textContent = `Last update: ${new Date().toLocaleString()}`;
 }
 
-function init() {
-  const amountInput = document.getElementById('amount');
-  const fromSelect = document.getElementById('fromCurrency');
-  const toSelect = document.getElementById('toCurrency');
+document.addEventListener('DOMContentLoaded', () => {
+  const amountEl = document.getElementById('amount');
+  const fromSel = document.getElementById('fromCurrency');
+  const toSel = document.getElementById('toCurrency');
   const swapBtn = document.querySelector('.btn-swap');
 
-  if (amountInput) amountInput.addEventListener('input', doConvert);
-  if (fromSelect) fromSelect.addEventListener('change', doConvert);
-  if (toSelect) toSelect.addEventListener('change', doConvert);
-  if (swapBtn) swapBtn.addEventListener('click', e => { e.preventDefault(); swap(); });
+  if (amountEl) amountEl.addEventListener('input', convert);
+  if (fromSel) fromSel.addEventListener('change', convert);
+  if (toSel) toSel.addEventListener('change', convert);
+  if (swapBtn) swapBtn.addEventListener('click', (e) => { e.preventDefault(); swapCurrencies(); });
 
-  // initial run to show values
-  doConvert();
-  populateRates();
-
-  // short on-page explanation for clarity
-  const explain = document.getElementById('explainText');
-  if (explain) explain.textContent = 'Formula: result = amount × (rate_to / rate_from) — demo rates are relative to USD.';
-}
-
-document.addEventListener('DOMContentLoaded', init);
+  // initial conversion and rates population
+  convert();
+  populateRatesTable();
+});
 
