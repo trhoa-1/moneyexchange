@@ -1,12 +1,14 @@
 @font-face {
   font-family: "SF-Pro-Display-Black";
-  src: url("assets/SF-Pro-Display-Black.otf") format("opentype");
+  src: url("../fonts/SF-Pro-Display-Black.otf") format("opentype");
+  font-display: swap;
   font-weight: 900;
 }
 
 @font-face {
   font-family: "SF-Pro";
-  src: url("assets/SF-Pro.ttf") format("truetype");
+  src: url("../fonts/SF-Pro.ttf") format("truetype");
+  font-display: swap;
   font-weight: 400;
 }
 
@@ -19,6 +21,13 @@
   --bg-white: #ffffff;
   --text-primary: #0b2545;
   --text-secondary: #4b5563;
+  /* logical variables for easy theming */
+  --hero-text: var(--bg-white);
+  --hero-subtext: rgba(255,255,255,0.9);
+  --btn-cta-text: var(--bg-white);
+  --footer-bg: var(--text-primary);
+  --footer-text: var(--bg-white);
+  --footer-text-rgba: rgba(255,255,255,0.8);
   --border-light: #e6e9ee;
   --shadow-sm: 0 1px 2px rgba(11, 37, 69, 0.04);
   --shadow-md: 0 6px 18px rgba(11, 37, 69, 0.08);
@@ -39,7 +48,7 @@ html, body {
 
 p {
   font-family: "SF-Pro", sans-serif;
-  color: white;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -109,7 +118,7 @@ p {
 
 .nav-btn-cta {
   background-color: var(--primary);
-  color: var(--bg-white);
+  color: var(--btn-cta-text);
   padding: 10px 20px;
   font-weight: 700;
 }
@@ -124,7 +133,7 @@ p {
   margin-top: 70px;
   padding: 60px 40px;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: var(--bg-white);
+  color: var(--hero-text);
   text-align: center;
 }
 
@@ -137,7 +146,7 @@ p {
 
 .hero-subtitle {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--hero-subtext);
   margin: 0;
 }
 
@@ -209,6 +218,22 @@ p {
   transition: all 0.3s ease;
 }
 
+/* Ensure inputs and selects follow the current theme for text color */
+.input-group input,
+.currency-select,
+select,
+textarea {
+  color: var(--text-primary);
+}
+
+/* Placeholder color also follows theme */
+.input-group input::placeholder,
+select::placeholder,
+textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 1;
+}
+
 .input-group input {
   background-color: var(--bg-light);
 }
@@ -260,7 +285,7 @@ p {
 
 .btn-swap:hover {
   background-color: var(--primary);
-  color: var(--bg-white);
+  color: var(--btn-cta-text);
   transform: rotate(180deg);
 }
 
@@ -290,7 +315,7 @@ p {
   width: 100%;
   padding: 14px;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: var(--bg-white);
+  color: var(--btn-cta-text);
   border: none;
   border-radius: 8px;
   font-size: 1.05rem;
@@ -355,15 +380,15 @@ p {
 
 /* FOOTER */
 .footer {
-  background-color: var(--text-primary);
-  color: var(--bg-white);
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
   text-align: center;
   padding: 30px 20px;
   margin-top: 60px;
 }
 
 .footer p {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--footer-text-rgba);
   font-size: 0.9rem;
 }
 
@@ -433,4 +458,32 @@ p {
   .info-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Dark theme: override only the variables we need */
+:root[data-theme="dark"] {
+  --primary: #58a6ff;
+  --primary-dark: #2f6fd6;
+  --primary-light: rgba(88,166,255,0.12);
+  --accent: #00a3d9;
+  --bg-light: #071028; /* page background */
+  --bg-white: #0b1220; /* card backgrounds */
+  --text-primary: #e6eefc;
+  --text-secondary: #9fb4d6;
+  /* logical overrides for dark theme */
+  --hero-text: var(--text-primary);
+  --hero-subtext: var(--text-secondary);
+  --btn-cta-text: var(--text-primary);
+  --footer-bg: var(--bg-white);
+  --footer-text: var(--text-primary);
+  --footer-text-rgba: rgba(230,238,252,0.85);
+  --border-light: rgba(255,255,255,0.06);
+  --shadow-sm: 0 1px 3px rgba(2,6,23,0.6);
+  --shadow-md: 0 8px 30px rgba(2,6,23,0.6);
+  --shadow-lg: 0 18px 40px rgba(2,6,23,0.6);
+}
+
+/* smooth theme transitions */
+html, body, .converter-card, .rates-table, .info-card, .navbar {
+  transition: background-color 240ms ease, color 240ms ease, border-color 240ms ease;
 }

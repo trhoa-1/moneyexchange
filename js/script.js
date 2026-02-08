@@ -229,25 +229,25 @@ function populateRatesTable() {
   const updated = document.getElementById('rates-updated');
   if (!tbody) return;
 
-  const popular = ['EUR','GBP','JPY','AUD','CAD','CHF','CNY','INR','MXN','BRL','ZAR','RUB','TRY','USD'];
+  const popular = ['EUR','GBP','JPY','AUD','CAD','CNY','INR','MXN','BRL','KRW','SGD','CHF','SEK','NZD','RUB','VND'];
   tbody.innerHTML = '';
   const base = 'USD';
+  const time = new Date().toLocaleString();
+  
   popular.forEach(cur => {
     if (!exchangeRates[cur]) return;
+    
     const rate = getRate(base, cur);
-    const tr = document.createElement('tr');
-    const tdPair = document.createElement('td');
-    tdPair.textContent = `${base}/${cur}`;
-    const tdRate = document.createElement('td');
-    tdRate.textContent = formatNumber(rate);
-    const tdTime = document.createElement('td');
-    tdTime.textContent = new Date().toLocaleString();
-    tr.appendChild(tdPair);
-    tr.appendChild(tdRate);
-    tr.appendChild(tdTime);
-    tbody.appendChild(tr);
+    const row = `<tr>
+      <td>${base}/${cur}</td>
+      <td>${formatNumber(rate)}</td>
+      <td>${time}</td>
+    </tr>`;
+    
+    tbody.innerHTML += row;
   });
-  if (updated) updated.textContent = `Last update: ${new Date().toLocaleString()}`;
+  
+  if (updated) updated.textContent = `Last update: ${time}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -255,11 +255,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const fromSel = document.getElementById('fromCurrency');
   const toSel = document.getElementById('toCurrency');
   const swapBtn = document.querySelector('.btn-swap');
+  const themeToggle = document.getElementById('themeToggle');
 
   if (amountEl) amountEl.addEventListener('input', convert);
   if (fromSel) fromSel.addEventListener('change', convert);
   if (toSel) toSel.addEventListener('change', convert);
   if (swapBtn) swapBtn.addEventListener('click', (e) => { e.preventDefault(); swapCurrencies(); });
+
+  // Theme: toggle and persistence
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      if (themeToggle) themeToggle.textContent = '☀️';
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      if (themeToggle) themeToggle.textContent = '🌙';
+    }
+  }
+
+  function loadTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    // fallback to OS preference
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem('theme', next);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', (e) => { e.preventDefault(); toggleTheme(); });
+  }
+
+  // Apply initial theme
+  applyTheme(loadTheme());
 
   // initial conversion and rates population
   convert();
