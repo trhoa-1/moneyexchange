@@ -1,7 +1,6 @@
-// Note: this simple demo uses the built-in `exchangeRates` object below.
-// The API constants are left here for future live updates.
-const API_KEY = "fxr_live_5c65d8ad56ef078646fc6f819cc52ba705e8"; // unused in demo
-const API_URL = "https://api.fxratesapi.com/latest"; // unused in demo
+// Note: this app fetches live exchange rates from the API
+const API_KEY = "fxr_live_5c65d8ad56ef078646fc6f819cc52ba705e8";
+const API_URL = "https://api.fxratesapi.com/latest";
 
 let exchangeRates = {
   ADA: 2.8102680129,AED: 3.6731007206,AFN: 66.3163066921,ALL: 82.5000106674,AMD: 379.0700476731,ANG: 1.7880002015,AOA: 912.2151768577,
@@ -180,20 +179,28 @@ let exchangeRates = {
   ZWL: 64016.645883199,
 };
 
+// --- Fetch live exchange rates from API ---
+async function fetchLiveRates() {
+  try {
+    const params = new URLSearchParams({
+      apikey: API_KEY,
+      base: 'USD'
+    });
+    const response = await fetch(`${API_URL}?${params}`);
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    const data = await response.json();
+    if (data.rates) {
+      Object.assign(exchangeRates, data.rates);
+      console.log('✓ Live rates updated from API');
+      doConvert();
+      populateRates();
+    }
+  } catch (error) {
+    console.error('Failed to fetch live rates:', error);
+  }
+}
+
 // --- Simple, well-commented converter logic ---
-
-/*
-  Data model:
-  - exchangeRates: map of currency code -> value meaning "1 USD = value (in that currency)".
-  Example: exchangeRates['EUR'] = 0.85 means 1 USD = 0.85 EUR.
-
-  Conversion logic (easy to understand):
-  - To convert A -> B we compute how many B for 1 A:
-    rate(A->B) = (USD->B) / (USD->A)
-  - Then result = amount * rate(A->B)
-
-  This file keeps DOM interactions minimal and names variables clearly.
-*/
 
 function rateFromTo(fromCode, toCode) {
   const usdToFrom = exchangeRates[fromCode];
@@ -304,13 +311,19 @@ function init() {
   if (toSelect) toSelect.addEventListener('change', doConvert);
   if (swapBtn) swapBtn.addEventListener('click', e => { e.preventDefault(); swap(); });
 
+  // Fetch live rates on page load
+  fetchLiveRates();
+  
+  // Refresh rates every hour (3600000 ms)
+  setInterval(fetchLiveRates, 3600000);
+
   // initial run to show values
   doConvert();
   populateRates();
 
   // short on-page explanation for clarity
   const explain = document.getElementById('explainText');
-  if (explain) explain.textContent = 'Formula: result = amount × (rate_to / rate_from) — demo rates are relative to USD.';
+  if (explain) explain.textContent = 'Formula: result = amount × (rate_to / rate_from) — rates are fetched live from the API.';
 }
 
 document.addEventListener('DOMContentLoaded', init);
