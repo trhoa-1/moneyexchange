@@ -1,0 +1,72 @@
+{
+  "en": {
+    "navbar": {
+      "title": "ExchangeZ",
+      "subtitle": "Live Currency Exchange",
+      "liveRates": "Live Rates",
+      "exchange": "Exchange",
+      "openAccount": "Open Account"
+    },
+    "hero": {
+      "title": "Fast, Transparent Currency Exchange",
+      "subtitle": "Get real-time exchange rates with no hidden fees"
+    },
+    "converter": {
+      "cardTitle": "Currency Converter",
+      "cardSubtitle": "Real-time rates • Updated every hour",
+      "from": "From",
+      "to": "To",
+      "enterAmount": "Enter amount",
+      "result": "Result"
+    },
+    "infoCards": {
+      "bestRates": "Best Rates",
+      "bestRatesDesc": "Competitive exchange rates updated in real-time",
+      "secure": "Secure",
+      "secureDesc": "Bank-level security for all transactions",
+      "instant": "Instant",
+      "instantDesc": "Convert currencies instantly with live rates"
+    },
+    "footer": "© 2026 ExchangeZ. Real-time currency exchange for everyone.",
+    "rates": {
+      "title": "Live Exchange Rates",
+      "subtitle": "Real-time currency rates updated every hour",
+      "rateFormat": "Exchange Rate"
+    }
+  },
+  "vi": {
+    "navbar": {
+      "title": "ExchangeZ",
+      "subtitle": "Tỷ giá hối đoái trực tiếp",
+      "liveRates": "Tỷ giá trực tiếp",
+      "exchange": "Chuyển đổi",
+      "openAccount": "Mở tài khoản"
+    },
+    "hero": {
+      "title": "Chuyển đổi tiền tệ nhanh chóng và minh bạch",
+      "subtitle": "Nhận tỷ giá hối đoái thực tế không có phí ẩn"
+    },
+    "converter": {
+      "cardTitle": "Bộ chuyển đổi tiền tệ",
+      "cardSubtitle": "Tỷ giá thực tế • Cập nhật mỗi giờ",
+      "from": "Từ",
+      "to": "Đến",
+      "enterAmount": "Nhập số tiền",
+      "result": "Kết quả"
+    },
+    "infoCards": {
+      "bestRates": "Tỷ giá tốt nhất",
+      "bestRatesDesc": "Tỷ giá cạnh tranh được cập nhật trong thời gian thực",
+      "secure": "An toàn",
+      "secureDesc": "Bảo mật cấp độ ngân hàng cho tất cả các giao dịch",
+      "instant": "Tức thì",
+      "instantDesc": "Chuyển đổi tiền tệ ngay lập tức với tỷ giá trực tiếp"
+    },
+    "footer": "© 2026 ExchangeZ. Chuyển đổi tiền tệ thực tế cho mọi người.",
+    "rates": {
+      "title": "Tỷ giá hối đoái trực tiếp",
+      "subtitle": "Tỷ giá tiền tệ thực tế được cập nhật mỗi giờ",
+      "rateFormat": "Tỷ giá hối đoái"
+    }
+  }
+}

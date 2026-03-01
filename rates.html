@@ -6,35 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Currency Rates - ExchangeZ</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/language.js"></script>
 </head>
 
 <body>
     <div class="navbar">
         <div class="navbar-left">
-            <h1 class="title">ExchangeZ</h1>
-            <span class="subtitle">Live Currency Exchange</span>
+            <h1 class="title" data-i18n="navbar.title">ExchangeZ</h1>
+            <span class="subtitle" data-i18n="navbar.subtitle">Live Currency Exchange</span>
         </div>
         <div class="navbar-right">
-            <a href="index.html"><button class="nav-btn">Exchange</button></a>
-            <a href="rates.html"><button class="nav-btn">Live Rates</button></a>
+            <a href="index.html"><button class="nav-btn" data-i18n="navbar.exchange">Exchange</button></a>
+            <a href="rates.html"><button class="nav-btn" data-i18n="navbar.liveRates">Live Rates</button></a>
             <button id="themeToggle" class="nav-btn" aria-label="Toggle light dark theme">🌙</button>
-            <a href="#"><button class="nav-btn nav-btn-cta">Open Account</button></a>
+            <button id="langToggle" class="nav-btn" onclick="toggleLanguage()">🇻🇳 VN</button>
+            <a href="#"><button class="nav-btn nav-btn-cta" data-i18n="navbar.openAccount">Open Account</button></a>
         </div>
     </div>
 
     <div class="hero">
-        <div class="hero-content">
-            <h2>Fast, Transparent Currency Exchange</h2>
+        <div cl data-i18n="hero.title">Fast, Transparent Currency Exchange</h2>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">Get real-timeange</h2>
             <p class="hero-subtitle">Get hourly exchange rates with no hidden fees</p>
         </div>
     </div>
     <div class="rates-container">
-        <h1 class="rates-title">Live Currency Exchange Rates - Restart pages to refresh</h1>
+        <h1 class="rates-title" data-i18n="rates.title">Live Currency Exchange Rates</h1>
         <table class="rates-table">
             <thead>
                 <tr>
-                    <th>Currency Pair</th>
-                    <th>Exchange Rate</th>
+                    <th data-i18n="rates.rateFormat">Exchange Rate</th>
+                    <th>Rate</th>
                     <th>Last Updated</th>
                 </tr>
             </thead>
@@ -48,7 +50,7 @@
         </table>
     </div>
     <footer class="footer">
-        <p>&copy; 2026 ExchangeZ. Real-time currency exchange for everyone.</p>
+        <p data-i18n="footer">&copy; 2026 ExchangeZ. Real-time currency exchange for everyone.</p>
     </footer>
 
     <script src="js/script.js"></script>

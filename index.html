@@ -6,40 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ExchangeZ - Real-Time Currency Exchange</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/language.js"></script>
 </head>
 
 <body>
     <div class="navbar">
         <div class="navbar-left">
-            <h1 class="title">ExchangeZ</h1>
-            <span class="subtitle">Live Currency Exchange</span>
+            <h1 class="title" data-i18n="navbar.title">ExchangeZ</h1>
+            <span class="subtitle" data-i18n="navbar.subtitle">Live Currency Exchange</span>
         </div>
         <div class="navbar-right">
-            <a href="rates.html"><button class="nav-btn">Live Rates</button></a>
-            <a href="index.html"><button class="nav-btn">Exchange</button></a>
+            <a href="rates.html"><button class="nav-btn" data-i18n="navbar.liveRates">Live Rates</button></a>
+            <a href="index.html"><button class="nav-btn" data-i18n="navbar.exchange">Exchange</button></a>
             <button id="themeToggle" class="nav-btn" aria-label="Toggle light dark theme">🌙</button>
-            <a href="#"><button class="nav-btn nav-btn-cta">Open Account</button></a>
+            <button id="langToggle" class="nav-btn" onclick="toggleLanguage()">🇻🇳 VN</button>
+            <a href="#"><button class="nav-btn nav-btn-cta" data-i18n="navbar.openAccount">Open Account</button></a>
         </div>
     </div>
 
     <div class="hero">ExchangeZ - Real-Time Currency Exchange
         <div class="hero-content">
-            <h2>Fast, Transparent Currency Exchange</h2>
-            <p class="hero-subtitle">Get real-time exchange rates with no hidden fees</p>
+            <h2 data-i18n="hero.title">Fast, Transparent Currency Exchange</h2>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">Get real-time exchange rates with no hidden fees</p>
         </div>
     </div>
 
     <div class="main-container">
         <div class="converter-card">
             <div class="card-header">
-                <h1 class="card-title">Currency Converter</h1>
-                <p class="card-subtitle">Real-time rates • Updated every hour</p>
+                <h1 class="card-title" data-i18n="converter.cardTitle">Currency Converter</h1>
+                <p class="card-subtitle" data-i18n="converter.cardSubtitle">Real-time rates • Updated every hour</p>
             </div>
 
             <div class="converter-content">
                     <div class="input-group from-group">
-                        <label>From</label>
-                        <input type="number" id="amount" placeholder="Enter amount" min="0" step="0.01" value="1">
+                        <label data-i18n="converter.from">From</label>
+                        <input type="number" id="amount" data-i18n="converter.enterAmount" placeholder="Enter amount" min="0" step="0.01" value="1">
                         <select id="fromCurrency" class="currency-select">
                         <option value="USD">🇺🇸 USD - US Dollar</option>
                         <option value="EUR">🇪🇺 EUR - Euro</option>
@@ -62,12 +64,12 @@
                     </div>
 
                 <div class="swap-button">
-                    <button class="btn-swap" title="Swap currencies">⇄</button>
+                    <button class="btn-swap">⇄</button>
                 </div>
 
                 <div class="input-group to-group">
-                    <label>To</label>
-                    <input type="number" id="result" placeholder="Result" readonly>
+                    <label data-i18n="converter.to">To</label>
+                    <input type="number" id="result" data-i18n="converter.result" placeholder="Result" readonly>
                     <select id="toCurrency" class="currency-select">
                         <option value="USD">🇺🇸 USD - US Dollar</option>
                         <option value="EUR">🇪🇺 EUR - Euro</option>
@@ -83,7 +85,7 @@
                         <option value="SGD">🇸🇬 SGD - Singapore Dollar</option>
                         <option value="CHF">🇨🇭 CHF - Swiss Franc</option>
                         <option value="SEK">🇸🇪 SEK - Swedish Krona</option>
-                        <option value="NZD">🇳🇿 NZD - New Zealand Dollar</option>
+                        <option value="NZD">🇳🇿 NZD - New Zealand Dollar</option>    
                         <option value="RUB">🇷🇺 RUB - Russian Ruble</option>
                         <option value="VND">🇻🇳 VND - Vietnamese Dong</option>
                     </select>
@@ -98,24 +100,24 @@
         <div class="info-grid">
             <div class="info-card">
                 <div class="info-icon">💰</div>
-                <h3>Best Rates</h3>
-                <p>Competitive exchange rates updated in real-time</p>
+                <h3 data-i18n="infoCards.bestRates">Best Rates</h3>
+                <p data-i18n="infoCards.bestRatesDesc">Competitive exchange rates updated in real-time</p>
             </div>
             <div class="info-card">
                 <div class="info-icon">🔒</div>
-                <h3>Secure</h3>
-                <p>Bank-level security for all transactions</p>
+                <h3 data-i18n="infoCards.secure">Secure</h3>
+                <p data-i18n="infoCards.secureDesc">Bank-level security for all transactions</p>
             </div>
             <div class="info-card">
                 <div class="info-icon">⚡</div>
-                <h3>Instant</h3>
-                <p>Convert currencies instantly with live rates</p>
+                <h3 data-i18n="infoCards.instant">Instant</h3>
+                <p data-i18n="infoCards.instantDesc">Convert currencies instantly with live rates</p>
             </div>
         </div>
     </div>
 
     <footer class="footer">
-        <p>&copy; 2026 ExchangeZ. Real-time currency exchange for everyone.</p>
+        <p data-i18n="footer">&copy; 2026 ExchangeZ. Real-time currency exchange for everyone.</p>
     </footer>
 
     <script src="js/script.js"></script>
