@@ -253,3 +253,36 @@ document.addEventListener('DOMContentLoaded', () => {
   convert();
   populateRatesTable();
 });
+
+// Theme: toggle and persistence
+function applyTheme(theme) {
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    if (themeToggle) themeToggle.textContent = '☀️';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    if (themeToggle) themeToggle.textContent = '🌙';
+  }
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem('theme');
+  if (saved) return saved;
+
+  return window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+}
+
+function toggleTheme() {
+  const current =
+    document.documentElement.getAttribute('data-theme') === 'dark'
+      ? 'dark'
+      : 'light';
+
+  const next = current === 'dark' ? 'light' : 'dark';
+
+  applyTheme(next);
+  localStorage.setItem('theme', next);
+}
