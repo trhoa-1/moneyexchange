@@ -1,8 +1,38 @@
+/* =========================================================
+   1. API CONFIGURATION
+   ---------------------------------------------------------
+   These variables store the API key and URL for a currency
+   exchange rate service. In this script they are NOT used
+   yet because the converter relies on hardcoded rates
+   stored locally below.
+   ========================================================= */
+
 const API_KEY = "fxr_live_5c65d8ad56ef078646fc6f819cc52ba705e8";
 const API_URL = "https://api.fxratesapi.com/latest";
 
+/* =========================================================
+   2. EXCHANGE RATE DATABASE
+   ---------------------------------------------------------
+   This object stores exchange rates for many currencies.
+   All values are based on USD.
+
+   Example:
+   EUR: 0.845
+   means
+   1 USD = 0.845 EUR
+
+   Using USD as a base makes conversions easy because
+   any currency pair can be calculated through USD.
+   ========================================================= */
+
 let exchangeRates = {
-  ADA: 2.8102680129,AED: 3.6731007206,AFN: 66.3163066921,ALL: 82.5000106674,AMD: 379.0700476731,ANG: 1.7880002015,AOA: 912.2151768577,
+  ADA: 2.8102680129,
+  AED: 3.6731007206,
+  AFN: 66.3163066921,
+  ALL: 82.5000106674,
+  AMD: 379.0700476731,
+  ANG: 1.7880002015,
+  AOA: 912.2151768577,
   ARB: 5.7214344631,
   ARS: 1434.0031675545,
   AUD: 1.4503002424,
@@ -178,7 +208,7 @@ let exchangeRates = {
   ZWL: 64016.645883199,
 };
 
-// --- Converter & rates UI logic ---
+// 3.  --- Converter & rates UI logic ---
 function getRate(from, to) {
   const usdToFrom = exchangeRates[from];
   const usdToTo = exchangeRates[to];
@@ -186,23 +216,48 @@ function getRate(from, to) {
   return usdToTo / usdToFrom;
 }
 
+// 4. Format number to 3 decimal places, or return 0 if not finite
+
 function formatNumber(n) {
   if (Number.isFinite(n)) {
-    return Math.round(n * 1000000) / 1000000;
+    return Math.round(n * 1000) / 1000;
   }
   return 0;
 }
 
+/* =========================================================
+   5. RATE DISPLAY
+   ---------------------------------------------------------
+   Updates the label showing the exchange rate used
+   for the conversion.
+
+   Example output:
+   1 USD = 0.845 EUR
+   ========================================================= */
+
 function updateRateDisplay(from, to, rate) {
-  const el = document.getElementById('rateDisplay');
+  const el = document.getElementById("rateDisplay");
   if (el) el.textContent = `1 ${from} = ${formatNumber(rate)} ${to}`;
 }
 
+/* =========================================================
+   6. MAIN CONVERSION FUNCTION
+   ---------------------------------------------------------
+   This is the core logic of the currency converter.
+
+   Steps:
+   1. Read user input amount
+   2. Read selected currencies
+   3. Calculate exchange rate
+   4. Multiply amount × rate
+   5. Display result
+   ========================================================= */
+
 function convert() {
-  const amountEl = document.getElementById('amount');
-  const resultEl = document.getElementById('result');
-  const fromSel = document.getElementById('fromCurrency');
-  const toSel = document.getElementById('toCurrency');
+  const amountEl = document.getElementById("amount");
+  const resultEl = document.getElementById("result");
+  const fromSel = document.getElementById("fromCurrency");
+  const toSel = document.getElementById("toCurrency");
   if (!amountEl || !resultEl || !fromSel || !toSel) return;
 
   const amount = parseFloat(amountEl.value) || 0;
@@ -214,9 +269,21 @@ function convert() {
   updateRateDisplay(from, to, rate);
 }
 
+/* =========================================================
+   7. SWAP FUNCTION
+   ---------------------------------------------------------
+   Allows users to quickly swap the source and target
+   currencies.
+
+   Example:
+   USD → EUR
+   becomes
+   EUR → USD
+   ========================================================= */
+
 function swapCurrencies() {
-  const fromSel = document.getElementById('fromCurrency');
-  const toSel = document.getElementById('toCurrency');
+  const fromSel = document.getElementById("fromCurrency");
+  const toSel = document.getElementById("toCurrency");
   if (!fromSel || !toSel) return;
   const tmp = fromSel.value;
   fromSel.value = toSel.value;
@@ -224,71 +291,119 @@ function swapCurrencies() {
   convert();
 }
 
+/* =========================================================
+   8. EXCHANGE RATE TABLE
+   ---------------------------------------------------------
+   Builds a table showing USD exchange rates for several
+   popular currencies.
+
+   This is purely informational and separate from the
+   converter calculation.
+   ========================================================= */
+
 function populateRatesTable() {
-  const tbody = document.getElementById('rates-tbody');
-  const updated = document.getElementById('rates-updated');
+  const tbody = document.getElementById("rates-tbody");
+  const updated = document.getElementById("rates-updated");
   if (!tbody) return;
 
-  const popular = ['EUR','GBP','JPY','AUD','CAD','CNY','INR','MXN','BRL','KRW','SGD','CHF','SEK','NZD','RUB','VND'];
-  tbody.innerHTML = '';
-  const base = 'USD';
+  const popular = [
+    "EUR",
+    "GBP",
+    "JPY",
+    "AUD",
+    "CAD",
+    "CNY",
+    "INR",
+    "MXN",
+    "BRL",
+    "KRW",
+    "SGD",
+    "CHF",
+    "SEK",
+    "NZD",
+    "RUB",
+    "VND",
+  ];
+  tbody.innerHTML = "";
+  const base = "USD";
   const time = new Date().toLocaleString();
-  
-  popular.forEach(cur => {
+
+  popular.forEach((cur) => {
     if (!exchangeRates[cur]) return;
-    
+
     const rate = getRate(base, cur);
     const row = `<tr>
       <td>${base}/${cur}</td>
       <td>${formatNumber(rate)}</td>
       <td>${time}</td>
     </tr>`;
-    
+
     tbody.innerHTML += row;
   });
-  
+
   if (updated) updated.textContent = `Last update: ${time}`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const amountEl = document.getElementById('amount');
-  const fromSel = document.getElementById('fromCurrency');
-  const toSel = document.getElementById('toCurrency');
-  const swapBtn = document.querySelector('.btn-swap');
-  const themeToggle = document.getElementById('themeToggle');
+/* =========================================================
+   9. PAGE INITIALIZATION
+   ---------------------------------------------------------
+   Runs when the page loads. It attaches event listeners
+   so the converter reacts to user input.
+   ========================================================= */
 
-  if (amountEl) amountEl.addEventListener('input', convert);
-  if (fromSel) fromSel.addEventListener('change', convert);
-  if (toSel) toSel.addEventListener('change', convert);
-  if (swapBtn) swapBtn.addEventListener('click', (e) => { e.preventDefault(); swapCurrencies(); });
+document.addEventListener("DOMContentLoaded", () => {
+  const amountEl = document.getElementById("amount");
+  const fromSel = document.getElementById("fromCurrency");
+  const toSel = document.getElementById("toCurrency");
+  const swapBtn = document.querySelector(".btn-swap");
+  const themeToggle = document.getElementById("themeToggle");
 
-  // Theme: toggle and persistence
+  if (amountEl) amountEl.addEventListener("input", convert);
+  if (fromSel) fromSel.addEventListener("change", convert);
+  if (toSel) toSel.addEventListener("change", convert);
+  if (swapBtn)
+    swapBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      swapCurrencies();
+    });
+
+  // 10. Theme: toggle and persistence
+
   function applyTheme(theme) {
-    if (theme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      if (themeToggle) themeToggle.textContent = '☀️';
+    if (theme === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+      if (themeToggle) themeToggle.textContent = "☀️";
     } else {
-      document.documentElement.removeAttribute('data-theme');
-      if (themeToggle) themeToggle.textContent = '🌙';
+      document.documentElement.removeAttribute("data-theme");
+      if (themeToggle) themeToggle.textContent = "🌙";
     }
   }
 
   function loadTheme() {
-    const saved = localStorage.getItem('theme');
+    const saved = localStorage.getItem("theme");
     if (saved) return saved;
     // fallback to OS preference
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   }
 
   function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
+    const current =
+      document.documentElement.getAttribute("data-theme") === "dark"
+        ? "dark"
+        : "light";
+    const next = current === "dark" ? "light" : "dark";
     applyTheme(next);
-    localStorage.setItem('theme', next);
+    localStorage.setItem("theme", next);
   }
 
   if (themeToggle) {
-    themeToggle.addEventListener('click', (e) => { e.preventDefault(); toggleTheme(); });
+    themeToggle.addEventListener("click", (e) => {
+      e.preventDefault();
+      toggleTheme();
+    });
   }
 
   // Apply initial theme
@@ -298,4 +413,3 @@ document.addEventListener('DOMContentLoaded', () => {
   convert();
   populateRatesTable();
 });
-
